@@ -1,4 +1,5 @@
 ﻿using DatabaseFirst_DWB.DataAccess;
+using DatabaseFirst_DWB.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,86 +8,104 @@ using System.Threading.Tasks;
 
 namespace DatabaseFirst_DWB.Services
 {
-    public class EmployeeSC : BaseSC
+    public class EmployeeSC : BaseSC, IActions<Employee, EmployeeDTO, int>
     {
-        public IQueryable<Employee> GetAllEmployees()
+        public IQueryable<Employee> GetAll()
         {
             return dataContext.Employees;
         }
 
-        public void UpdateEmployeeFirstNameById(string newName, int id = 1)
+        public Employee Get(int id)
         {
-            var filter = new EmployeeFilter();
-            var result = filter.FilterBy(new EmFilterId(id));
-            var currentEmployee = result.ToList().FirstOrDefault();
+            var employee = GetAll().FirstOrDefault(fd => fd.EmployeeId == id);
 
-            if (currentEmployee == null)
-                throw new Exception("No se encontró el empleado con el ID ingresado");
+            if (employee == null)
+                throw new ArgumentException($"El empleado con el id: {id} no fue encontrado");
 
-            currentEmployee.FirstName = newName;
-            dataContext.SaveChanges();
+            return employee;
         }
 
-        public abstract class EmployeeFilterSpecification
+        public void Add(EmployeeDTO obj)
         {
-            public IQueryable<Employee> Filter(IQueryable<Employee> employees)
+            try
             {
-                return ApplyFilter(employees);
+                var newEmployee = new Employee()
+                {
+                    FirstName = obj.Name,
+                    LastName = obj.FamilyName,
+                    Title = obj.Tag,
+                    Address = obj.Address
+                };
+
+                dataContext.Add(newEmployee);
+                dataContext.SaveChanges();
             }
-
-            protected abstract IQueryable<Employee> ApplyFilter(IQueryable<Employee> employees);
-        }
-
-        public class EmployeeFilter
-        {
-            public IQueryable<Employee> FilterBy(EmployeeFilterSpecification filter)
+            catch (Exception ex)
             {
-                return filter.Filter(new EmployeeSC().GetAllEmployees());
-            }
-        }
-
-        public class EmFilterName : EmployeeFilterSpecification
-        {
-            private string name;
-
-            public EmFilterName(string name)
-            {
-                this.name = name;
-            }
-
-            protected override IQueryable<Employee> ApplyFilter(IQueryable<Employee> employees)
-            {
-                return employees.Where(w => w.FirstName == this.name).Select(s => s);
+                Console.WriteLine(ex);
             }
         }
 
-        public class EmFilterTitle : EmployeeFilterSpecification
+        public void Update(int id, EmployeeDTO obj)
         {
-            private string title;
-
-            public EmFilterTitle(string title)
+            try
             {
-                this.title = title;
+                var employee = Get(id);
+
+                employee.FirstName = obj.Name ?? employee.FirstName;
+                employee.LastName = obj.FamilyName ?? employee.LastName;
+                employee.Title = obj.Tag ?? employee.Title;
+                employee.Address = obj.Address ?? employee.Address;
+
+                dataContext.Update(employee);
+                dataContext.SaveChanges();
             }
-
-            protected override IQueryable<Employee> ApplyFilter(IQueryable<Employee> employees)
+            catch (ArgumentException ex)
             {
-                return employees.Where(w => w.Title == this.title).Select(s => s);
+                Console.WriteLine(ex);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Ocurrió un error al guardar los cambios");
             }
         }
 
-        public class EmFilterId : EmployeeFilterSpecification
+        public void Delete(int id)
         {
-            private int id;
-
-            public EmFilterId(int id)
+            try
             {
-                this.id = id;
+                var employee = Get(id);
+                dataContext.Employees.Remove(employee);
+                dataContext.SaveChanges();
             }
-
-            protected override IQueryable<Employee> ApplyFilter(IQueryable<Employee> employees)
+            catch (ArgumentException ex)
             {
-                return employees.Where(w => w.EmployeeId == this.id).Select(s => s);
+                Console.WriteLine(ex);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Ocurrió un error al interntar borrar el usuario.");
+            }
+        }
+
+        public class Filter : FilterController<Employee>
+        {
+            public override IQueryable<Employee> FilterBy(FilterSpecification<Employee> filter)
+            {
+                return filter.Filter(new EmployeeSC().GetAll());
+            }
+        }
+
+        public class FilterByCountry : FilterSpecification<Employee>
+        {
+            private string country;
+            public FilterByCountry(string country)
+            {
+                this.country = country;
+            }
+            protected override IQueryable<Employee> ApplyFilter(IQueryable<Employee> list)
+            {
+                return list.Where(w => w.Country == country);
             }
         }
     }

@@ -1,47 +1,27 @@
 ﻿using System;
 using System.Linq;
 using DatabaseFirst_DWB.DataAccess;
+using DatabaseFirst_DWB.Models;
 using DatabaseFirst_DWB.Services;
 
 namespace DatabaseFirst_DWB
 {
     class Program
     {
-        public static void SimpleSelect()
-        {
-
-            var employeeQuery = new EmployeeSC().GetAllEmployees().Select(s => s);
-            var output = employeeQuery.ToList();
-
-            output.ForEach(fe => Console.WriteLine($"Nombre: {fe.FirstName}"));
-        }
-
-        public static void Extra1(string title)
-        {
-            var filter = new EmployeeSC.EmployeeFilter();
-            var result = filter.FilterBy(new EmployeeSC.EmFilterTitle(title));
-            var output = result.ToList();
-
-            output.ForEach(fe => Console.WriteLine($"Nombre: {fe.FirstName}"));
-        }
-
-        public static void Extra2(string newName, int id = 1)
-        {
-            new EmployeeSC().UpdateEmployeeFirstNameById(newName, id);
-        }
-
-        public static void Extra3(string name)
-        {
-            var filter = new EmployeeSC.EmployeeFilter();
-            var result = filter.FilterBy(new EmployeeSC.EmFilterName(name));
-            var output = result.ToList();
-
-            output.ForEach(fe => Console.WriteLine($"Nombre: {fe.FirstName}"));
-        }
-
         static void Main(string[] args)
         {
-            //Code
+            CustomerSC SC = new();
+
+            CustomerDTO newCustomer = new()
+            {
+                Identifier = "MAPRX",
+                Company = "MachineProxy",
+                Contact = "Sebastian Loredo",
+                Title = "Mr.",
+                PhoneNumber = "8102469581"
+            };
+
+            SC.Add(newCustomer);
         }
     }
 }

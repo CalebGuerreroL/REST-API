@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseFirst_DWB", "DatabaseFirst_DWB\DatabaseFirst_DWB.csproj", "{9741CD2D-6A41-43DE-BBC8-186EF2B4C3B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseFirst_DWB", "DatabaseFirst_DWB\DatabaseFirst_DWB.csproj", "{9741CD2D-6A41-43DE-BBC8-186EF2B4C3B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API_DWB", "API_DWB\API_DWB.csproj", "{466F2240-0B70-46FB-803E-9F0BEA3F3C9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{9741CD2D-6A41-43DE-BBC8-186EF2B4C3B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9741CD2D-6A41-43DE-BBC8-186EF2B4C3B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9741CD2D-6A41-43DE-BBC8-186EF2B4C3B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{466F2240-0B70-46FB-803E-9F0BEA3F3C9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{466F2240-0B70-46FB-803E-9F0BEA3F3C9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{466F2240-0B70-46FB-803E-9F0BEA3F3C9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{466F2240-0B70-46FB-803E-9F0BEA3F3C9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
