@@ -51,7 +51,7 @@ namespace DatabaseFirst_DWB.DataAccess
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=DESKTOP-VVM0ENV;Database=Northwind;Trusted_connection=True;");
+                optionsBuilder.UseSqlServer("");
             }
         }
 
